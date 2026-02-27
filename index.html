@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>For Inaya 💜</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
+<style>
+body{margin:0;font-family:'Dancing Script',cursive;text-align:center;overflow:hidden;}
+.page{position:fixed;width:100%;height:100%;display:flex;justify-content:center;align-items:center;flex-direction:column;padding:40px;}
+#page1{ background:#ffc0cb; }
+#page2{ background:#e6ccff; display:none; }
+#page3{ background:#ffc0cb; display:none; }
+#page4{ background:#e6ccff; display:none; }
+#page5{ background:#ffc0cb; display:none; }
+.text{font-size:30px;color:#4b004b;max-width:900px;line-height:1.8;margin-bottom:25px;min-height:80px;}
+button{padding:10px 25px;font-size:20px;border:none;border-radius:25px;background:#b266ff;color:white;cursor:pointer;font-family:'Dancing Script',cursive;margin-top:20px;}
+.hearts{display:grid;grid-template-columns:repeat(3,130px);gap:30px;justify-content:center;margin-bottom:30px;}
+.heart{width:130px;height:120px;position:relative;cursor:pointer;}
+.heart:before,.heart:after{content:"";position:absolute;width:65px;height:100px;background:#ff4d88;border-radius:65px 65px 0 0;}
+.heart:before{left:65px;transform:rotate(-45deg);transform-origin:0 100%;}
+.heart:after{left:0;transform:rotate(45deg);transform-origin:100% 100%;}
+.heart-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:14px;width:100px;}
+.message{max-width:900px;font-size:20px;line-height:1.8;color:#4b004b;min-height:220px;}
+.kitty{position:fixed;bottom:20px;right:20px;width:150px;}
+.petal{position:fixed;font-size:26px;opacity:0.8;pointer-events:none;animation:fall linear infinite;}
+@keyframes fall{
+0%{transform:translateY(-10vh) translateX(0) rotate(0deg);}
+25%{transform:translateY(25vh) translateX(20px) rotate(90deg);}
+50%{transform:translateY(50vh) translateX(-20px) rotate(180deg);}
+75%{transform:translateY(75vh) translateX(15px) rotate(270deg);}
+100%{transform:translateY(110vh) translateX(-15px) rotate(360deg);}
+}
+.sparkle{position:fixed;width:8px;height:8px;background:radial-gradient(circle,#fff9c4 0%,#ffd700 60%,transparent 100%);border-radius:50%;box-shadow:0 0 15px #ffd700,0 0 30px #ffea00;opacity:0.9;animation:twinkle 0.8s infinite ease-in-out;pointer-events:none;}
+@keyframes twinkle{0%,100%{ transform:scale(0.8); opacity:0.6; }50%{ transform:scale(1.6); opacity:1; }}
+</style>
+</head>
+
+<body>
+
+<!-- 🎵 MUSIC PLAYER -->
+<audio id="bgMusic" autoplay loop></audio>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page">
+<div id="introText" class="text"></div>
+<button id="introBtn" style="display:none;" onclick="showPage(2)">Continue</button>
+<img src="kitty1.png" class="kitty">
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+<div class="hearts">
+<div class="heart" onclick="reveal(1)"><div class="heart-label">1<br>Click Me</div></div>
+<div class="heart" onclick="reveal(2)"><div class="heart-label">2<br>Click Me</div></div>
+<div class="heart" onclick="reveal(3)"><div class="heart-label">3<br>Click Me</div></div>
+<div class="heart" onclick="reveal(4)"><div class="heart-label">4<br>Click Me</div></div>
+<div class="heart" onclick="reveal(5)"><div class="heart-label">5<br>Click Me</div></div>
+<div class="heart" onclick="reveal(6)"><div class="heart-label">6<br>Click Me</div></div>
+<div class="heart" onclick="reveal(7)"><div class="heart-label">7<br>Click Me</div></div>
+<div class="heart" onclick="reveal(8)"><div class="heart-label">8<br>Click Me</div></div>
+<div class="heart" onclick="reveal(9)"><div class="heart-label">9<br>Click Me</div></div>
+</div>
+<div id="heartMessage" class="message"></div>
+<button id="to3" style="display:none;" onclick="showPage(3); typeWriter(3)">Continue</button>
+<img src="kitty1.png" class="kitty">
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page">
+<div id="text3" class="text"></div>
+<button id="to4" style="display:none;" onclick="showPage(4); typeWriter(4)">Continue</button>
+<img src="kitty1.png" class="kitty">
+</div>
+
+<!-- PAGE 4 -->
+<div id="page4" class="page">
+<div id="text4" class="text"></div>
+<button id="to5" style="display:none;" onclick="showPage(5); typeWriter(5)">Continue</button>
+<img src="kitty1.png" class="kitty">
+</div>
+
+<!-- PAGE 5 -->
+<div id="page5" class="page">
+<div id="text5" class="text"></div>
+
+<div id="choiceBox" style="display:none;">
+<div class="text" style="font-size:26px;">Please forgive me? 💜</div>
+<div style="margin-top:20px; position:relative; height:100px;">
+<button onclick="yesClicked()" style="margin-right:20px;">Yes</button>
+<button id="noBtn" onmouseover="moveNo()" style="position:absolute;">No</button>
+</div>
+</div>
+
+<div id="finalResponse" class="text" style="display:none;"></div>
+<img src="kitty1.png" class="kitty">
+</div>
+
+<script>
+
+
+/* 🎵 UPDATED SONG SYSTEM WITH FADE */
+const songs={
+1:{src:"rakh_lo_tum_chupake.mp3",start:30},
+2:{src:"samjhavan.mp3",start:34},
+3:{src:"tum_se_hi.mp3",start:126},
+4:{src:"nazm_nazm.mp3",start:70},
+5:{src:"humdum.mp3",start:33},
+yes:{src:"ranjhna.mp3",start:41}
+};
+
+const music=document.getElementById("bgMusic");
+music.volume=0;
+
+function fadeIn(){
+let v=0;
+const i=setInterval(()=>{
+if(v<1){v+=0.05;music.volume=v;}
+else clearInterval(i);
+},100);
+}
+
+function fadeOut(cb){
+let v=music.volume;
+const i=setInterval(()=>{
+if(v>0){v-=0.05;music.volume=v;}
+else{clearInterval(i);cb();}
+},100);
+}
+
+function playSong(key){
+fadeOut(()=>{
+music.src=songs[key].src;
+music.load();
+music.addEventListener("loadedmetadata",function setStart(){
+music.currentTime=songs[key].start;
+music.play().catch(()=>{});
+fadeIn();
+music.removeEventListener("loadedmetadata",setStart);
+});
+});
+}
+
+/* OVERRIDE PAGE SWITCH */
+function showPage(num){
+for(let i=1;i<=5;i++){
+document.getElementById("page"+i).style.display="none";
+}
+document.getElementById("page"+num).style.display="flex";
+playSong(num);
+}
+
+function yesClicked(){
+playSong("yes");
+choiceBox.style.display="none";
+finalResponse.style.display="block";
+finalResponse.innerText="Thanks yaar love you yaar aap best ho yaar🤭💜";
+}
+
+window.onload=()=>showPage(1);
+
+/* INTRO TYPEWRITER */
+const introMessage="ye lo malkin aapke liye kuch bnaya hai 💜";
+let introIndex=0;
+function typeIntro(){
+if(introIndex<introMessage.length){
+introText.innerHTML+=introMessage.charAt(introIndex);
+introIndex++;
+setTimeout(typeIntro,40);
+}else introBtn.style.display="inline-block";
+}
+typeIntro();
+
+/* HEART TYPEWRITER */
+let current=1;
+const heartTexts={
+1:`I know I messed up, and I won’t pretend I didn’t. I said things I shouldn’t have, reacted in ways I shouldn’t have, and I hurt you. That wasn’t my intention, but intentions don’t erase impact. I’m truly sorry for making you feel unimportant or unheard. You deserve patience, softness, and understanding — not frustration. If I could rewind that moment, I would choose calmer words and a kinder tone. I never want to be the reason your smile fades. Please believe me when I say I regret it deeply.`,
+2:`I miss the way we talk without hesitation. I miss how easy everything felt when we weren’t carrying this heaviness between us. The silence right now feels louder than any argument. It reminds me how much your presence matters in my life. I’m sorry for letting my ego speak louder than my heart. You mean more to me than being “right.” I would rather fix things than win anything. I just want us to feel okay again.`,
+3:`Sometimes I forget how sensitive hearts can be, even the strongest ones. I should have handled things with more care. You trusted me with your feelings, and I should have protected them better. I’m not perfect, but I am willing to grow. I don’t want to repeat mistakes that hurt you. If loving you means learning to be better, then I’m ready to learn every single day.`,
+4:`It hurts knowing I caused distance between us. I never wanted space to grow like this. I wanted closeness, warmth, comfort. I replay our conversations in my mind and wish I had paused before speaking. You matter to me in ways I don’t always express properly. I’m sorry for not showing it better. You deserve reassurance, not confusion.`,
+5:`I understand if you’re upset. I understand if you need time. Your feelings are valid. I’m not here to rush you or pressure you. I just want you to know that I see my mistake clearly now. I care about you too much to let pride ruin something meaningful. If forgiveness takes time, I’ll wait. You’re worth the patience.`,
+6:`You have always been someone special in my life. Your smile, your energy, your little habits — they mean more to me than I ever admitted. Losing even a little bit of that closeness feels unbearable. I’m sorry for risking something beautiful over something temporary. I promise to value us better.`,
+7:`I don’t want this chapter to end on misunderstanding. I want it to turn into growth. Every relationship faces moments like this, but what matters is whether we fight each other or fight the problem together. I choose us. I choose fixing things. I choose humility over ego.`,
+8:`If I could show you my heart right now, you’d see nothing but regret and hope. Regret for hurting you. Hope that you’ll give me another chance to prove I can be better. I don’t want perfection — I want progress. And I want that progress with you.`,
+9:`Please know this apology isn’t temporary emotion. It’s not just because I miss you. It’s because I value you. I value what we have, what we built, and what we could still become. I’m sorry — sincerely, deeply, honestly. And if there’s even a small space in your heart to forgive me, I promise I won’t waste it.`
+};
+
+function reveal(n){
+if(n!==current) return;
+typeWriterHeart(heartTexts[n]);
+if(n===9) to3.style.display="inline-block";
+current++;
+}
+
+function typeWriterHeart(text){
+heartMessage.innerHTML="";
+let i=0;
+function typing(){
+if(i<text.length){
+heartMessage.innerHTML+=text.charAt(i);
+i++;
+setTimeout(typing,25);
+}}
+typing();
+}
+
+/* OTHER TEXTS */
+const texts={
+3:`I need you in my life not because I can’t survive without you, but because life feels incomplete without you. You bring a balance to me that I didn’t even realize I was missing. The way you listen, the way you react, the way you care — it makes ordinary days feel meaningful. You calm my chaos. You challenge me to grow. You make me want to become a better version of myself, not out of pressure, but out of love and respect.
+When something good happens, you’re the first person I want to tell. When something goes wrong, you’re the one I wish I could turn to. That says everything. You’re not just someone in my life — you’re someone who shapes it. And that’s rare. I don’t want a future where you’re just a memory or a “what if.” I want you beside me, laughing with me, building something real together. That’s why I need you — not out of dependency, but because my heart chooses you.
+...`,
+4:`You mean more to me than I ever express properly. Sometimes I struggle to put feelings into words, but that doesn’t make them small. You’re important to me in quiet, deep ways. Your presence alone makes things lighter. Even your smallest messages change my mood. That’s not something ordinary.
+I feel lucky — genuinely lucky — to have someone like you in my life. Lucky that out of everyone in this world, our paths crossed. Lucky that I got to know your thoughts, your dreams, your silly side, your serious side. You’re not replaceable. You’re not temporary. You’re someone I value deeply.
+If I ever made you doubt your importance, I’m sorry. Because the truth is, having you beside me feels like a blessing I don’t want to lose....`,
+5:`I miss you more than I let on. I miss our conversations, the comfort, the little moments that seemed small at the time but feel huge now. It’s strange how silence can feel so heavy when you’re used to someone being there.
+I don’t just miss talking to you — I miss feeling connected to you. I miss knowing we’re okay. The distance hurts because what we have matters to me. You matter to me.
+I know I can’t force forgiveness. I can’t demand things to go back to normal instantly. But I can ask — sincerely — for another chance. A chance to fix things. A chance to prove that I’ve learned. A chance to show you that what we have is worth fighting for.
+Please come back. Not out of pity. Not out of pressure. But because you still feel something too. I’m here, willing to rebuild, step by step.
+And I promise — this time, I’ll protect what we have...`
+};
+
+function typeWriter(page){
+let element=document.getElementById("text"+page);
+let text=texts[page];
+let i=0;element.innerHTML="";
+function typing(){
+if(i<text.length){element.innerHTML+=text.charAt(i);i++;setTimeout(typing,30);}
+else{
+if(page===3) to4.style.display="inline-block";
+if(page===4) to5.style.display="inline-block";
+if(page===5) choiceBox.style.display="block";
+}}
+typing();
+}
+
+function moveNo(){noBtn.style.transform=`translate(${Math.random()*200-100}px,${Math.random()*60-30}px)`;}
+function yesClicked(){choiceBox.style.display="none";finalResponse.style.display="block";finalResponse.innerText="Thanks yaar love you yaar aap best ho yaar🤭💜";}
+
+/* PETALS */
+setInterval(()=>{let p=document.createElement("div");p.className="petal";p.innerHTML="🌸";p.style.left=Math.random()*100+"vw";p.style.animationDuration=(8+Math.random()*4)+"s";document.body.appendChild(p);setTimeout(()=>p.remove(),12000);},500);
+
+/* SPARKLES */
+setInterval(()=>{let s=document.createElement("div");s.className="sparkle";s.style.left=Math.random()*100+"vw";s.style.top=Math.random()*100+"vh";document.body.appendChild(s);setTimeout(()=>s.remove(),900);},120);
+
+</script>
+</body>
+</html>
