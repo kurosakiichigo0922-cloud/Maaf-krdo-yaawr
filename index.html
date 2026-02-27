@@ -38,11 +38,14 @@ button{padding:10px 25px;font-size:20px;border:none;border-radius:25px;backgroun
 
 <body>
 
-<audio id="bgMusic" autoplay loop></audio>
+<audio id="bgMusic" loop preload="auto"></audio>
 
 <!-- PAGE 1 -->
 <div id="page1" class="page">
 <div id="introText" class="text"></div>
+
+<button id="startMusicBtn" onclick="startMusic()">🎵 Click Me To Start Music</button>
+
 <button id="introBtn" style="display:none;" onclick="showPage(2)">Continue</button>
 <img src="kitty1.png" class="kitty">
 </div>
@@ -110,14 +113,16 @@ yes:{src:"ranjhna.mp3",start:41}
 const music=document.getElementById("bgMusic");
 
 function playSong(key){
-music.pause();
-music.src=songs[key].src;
-music.load();
-music.addEventListener("loadedmetadata",function setStart(){
-music.currentTime=songs[key].start;
-music.play().catch(()=>{});
-music.removeEventListener("loadedmetadata",setStart);
-});
+    if(!songs[key]) return;
+
+    music.pause();
+
+    if(music.src.indexOf(songs[key].src) === -1){
+        music.src = songs[key].src;
+    }
+
+    music.currentTime = songs[key].start;
+    music.play().catch(()=>{});
 }
 
 function showPage(num){
@@ -171,49 +176,135 @@ current++;
 
 function typeWriterHeart(text){
 heartMessage.innerHTML="";
+<script>
+
+/* 🎵 SONG SYSTEM (INSTANT, NO FADE) */
+
+const songs = {
+1:{src:"rakh_lo_tum_chupake.mp3", start:3},
+2:{src:"samjhavan.mp3", start:34},
+3:{src:"tum_se_hi.mp3", start:126},
+4:{src:"nazm_nazm.mp3", start:70},
+5:{src:"humdum.mp3", start:33},
+yes:{src:"ranjhna.mp3", start:41}
+};
+
+const music = document.getElementById("bgMusic");
+
+/* Preload songs */
+Object.values(songs).forEach(song=>{
+let a=new Audio();
+a.src=song.src;
+});
+
+/* Play instantly */
+function playSong(key){
+if(!songs[key]) return;
+music.pause();
+music.src = songs[key].src;
+music.currentTime = songs[key].start;
+music.play().catch(()=>{});
+}
+
+/* Start music button */
+function startMusic(){
+playSong(1);
+document.getElementById("startMusicBtn").style.display="none";
+document.getElementById("introBtn").style.display="inline-block";
+}
+
+/* Page switch */
+function showPage(num){
+for(let i=1;i<=5;i++){
+document.getElementById("page"+i).style.display="none";
+}
+document.getElementById("page"+num).style.display="block";
+playSong(num);
+}
+
+/* ❤️ HEART MESSAGES */
+const heartTexts = {
+1:"You are the calm in my chaos 💗",
+2:"Every moment with you feels special ✨",
+3:"You make ordinary days magical 🌸",
+4:"Your smile is my favorite sight 😊",
+5:"I never want to lose you 💞",
+6:"You matter to me more than you know 💖",
+7:"You are my safe place 🫶",
+8:"Life feels better with you 🌷",
+9:"My heart chooses you, always ❤️"
+};
+
+function reveal(num){
+const heartMessage = document.getElementById("heartMessage");
+heartMessage.innerHTML = "";
+let text = heartTexts[num];
 let i=0;
+
 function typing(){
 if(i<text.length){
-heartMessage.innerHTML+=text.charAt(i);
+heartMessage.innerHTML += text.charAt(i);
 i++;
 setTimeout(typing,25);
-}}
+}
+}
 typing();
 }
 
+/* 💌 LONG PAGE TEXTS */
+
 const texts={
-3:`I need you in my life not because I can’t survive without you, but because life feels incomplete without you. You bring a balance to me that I didn’t even realize I was missing. The way you listen, the way you react, the way you care — it makes ordinary days feel meaningful. You calm my chaos. You challenge me to grow. You make me want to become a better version of myself, not out of pressure, but out of love and respect.
-When something good happens, you’re the first person I want to tell. When something goes wrong, you’re the one I wish I could turn to. That says everything. You’re not just someone in my life — you’re someone who shapes it. And that’s rare. I don’t want a future where you’re just a memory or a “what if.” I want you beside me, laughing with me, building something real together. That’s why I need you — not out of dependency, but because my heart chooses you.
-...`,
-4:`You mean more to me than I ever express properly. Sometimes I struggle to put feelings into words, but that doesn’t make them small. You’re important to me in quiet, deep ways. Your presence alone makes things lighter. Even your smallest messages change my mood. That’s not something ordinary.
-I feel lucky — genuinely lucky — to have someone like you in my life. Lucky that out of everyone in this world, our paths crossed. Lucky that I got to know your thoughts, your dreams, your silly side, your serious side. You’re not replaceable. You’re not temporary. You’re someone I value deeply.
-If I ever made you doubt your importance, I’m sorry. Because the truth is, having you beside me feels like a blessing I don’t want to lose....`,
-5:`I miss you more than I let on. I miss our conversations, the comfort, the little moments that seemed small at the time but feel huge now. It’s strange how silence can feel so heavy when you’re used to someone being there.
-I don’t just miss talking to you — I miss feeling connected to you. I miss knowing we’re okay. The distance hurts because what we have matters to me. You matter to me.
-I know I can’t force forgiveness. I can’t demand things to go back to normal instantly. But I can ask — sincerely — for another chance. A chance to fix things. A chance to prove that I’ve learned. A chance to show you that what we have is worth fighting for.
-Please come back. Not out of pity. Not out of pressure. But because you still feel something too. I’m here, willing to rebuild, step by step.
-And I promise — this time, I’ll protect what we have...`
+3:`I need you in my life not because I can’t survive without you, but because life feels incomplete without you. You bring a balance to me that I didn’t even realize I was missing. The way you listen, the way you react, the way you care — it makes ordinary days feel meaningful. You calm my chaos. You challenge me to grow. You make me want to become a better version of myself, not out of pressure, but out of love and respect.When something good happens, you’re the first person I want to tell. When something goes wrong, you’re the one I wish I could turn to. That says everything. You’re not just someone in my life — you’re someone who shapes it. And that’s rare. I don’t want a future where you’re just a memory or a “what if.” I want you beside me, laughing with me, building something real together. That’s why I need you — not out of dependency, but because my heart chooses you.
+...,
+4:`You mean more to me than I ever express properly. Sometimes I struggle to put feelings into words, but that doesn’t make them small. You’re important to me in quiet, deep ways. Your presence alone makes things lighter. Even your smallest messages change my mood. That’s not something ordinary.I feel lucky — genuinely lucky — to have someone like you in my life. Lucky that out of everyone in this world, our paths crossed. Lucky that I got to know your thoughts, your dreams, your silly side, your serious side. You’re not replaceable. You’re not temporary. You’re someone I value deeply.If I ever made you doubt your importance, I’m sorry. Because the truth is, having you beside me feels like a blessing I don’t want to lose....`,
+5:`I miss you more than I let on. I miss our conversations, the comfort, the little moments that seemed small at the time but feel huge now. It’s strange how silence can feel so heavy when you’re used to someone being there.I don’t just miss talking to you — I miss feeling connected to you. I miss knowing we’re okay. The distance hurts because what we have matters to me. You matter to me.I know I can’t force forgiveness. I can’t demand things to go back to normal instantly. But I can ask — sincerely — for another chance. A chance to fix things. A chance to prove that I’ve learned. A chance to show you that what we have is worth fighting for.Please come back. Not out of pity. Not out of pressure. But because you still feel something too. I’m here, willing to rebuild, step by step.And I promise — this time, I’ll protect what we have...`
 };
 
 function typeWriter(page){
 let element=document.getElementById("text"+page);
 let text=texts[page];
-let i=0;element.innerHTML="";
+let i=0;
+element.innerHTML="";
+
 function typing(){
-if(i<text.length){element.innerHTML+=text.charAt(i);i++;setTimeout(typing,30);}
-else{
+if(i<text.length){
+element.innerHTML+=text.charAt(i);
+i++;
+setTimeout(typing,30);
+}else{
 if(page===3) to4.style.display="inline-block";
 if(page===4) to5.style.display="inline-block";
 if(page===5) choiceBox.style.display="block";
-}}
+}
+}
 typing();
 }
 
-function moveNo(){noBtn.style.transform=`translate(${Math.random()*200-100}px,${Math.random()*60-30}px)`;}
+/* Move NO button */
+function moveNo(){
+noBtn.style.transform=`translate(${Math.random()*200-100}px,${Math.random()*60-30}px)`
+}
 
-setInterval(()=>{let p=document.createElement("div");p.className="petal";p.innerHTML="🌸";p.style.left=Math.random()*100+"vw";p.style.animationDuration=(8+Math.random()*4)+"s";document.body.appendChild(p);setTimeout(()=>p.remove(),12000);},500);
+/* 🌸 Petals */
+setInterval(()=>{
+let p=document.createElement("div");
+p.className="petal";
+p.innerHTML="🌸";
+p.style.left=Math.random()*100+"vw";
+p.style.animationDuration=(8+Math.random()*4)+"s";
+document.body.appendChild(p);
+setTimeout(()=>p.remove(),12000);
+},500);
 
-setInterval(()=>{let s=document.createElement("div");s.className="sparkle";s.style.left=Math.random()*100+"vw";s.style.top=Math.random()*100+"vh";document.body.appendChild(s);setTimeout(()=>s.remove(),900);},120);
+/* ✨ Sparkles */
+setInterval(()=>{
+let s=document.createElement("div");
+s.className="sparkle";
+s.style.left=Math.random()*100+"vw";
+s.style.top=Math.random()*100+"vh";
+document.body.appendChild(s);
+setTimeout(()=>s.remove(),900);
+},120);
 
 </script>
 </body>
