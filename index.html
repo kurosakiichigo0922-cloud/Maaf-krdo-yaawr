@@ -38,7 +38,6 @@ button{padding:10px 25px;font-size:20px;border:none;border-radius:25px;backgroun
 
 <body>
 
-<!-- 🎵 MUSIC PLAYER -->
 <audio id="bgMusic" autoplay loop></audio>
 
 <!-- PAGE 1 -->
@@ -98,8 +97,7 @@ button{padding:10px 25px;font-size:20px;border:none;border-radius:25px;backgroun
 
 <script>
 
-
-/* 🎵 UPDATED SONG SYSTEM WITH FADE */
+/* 🎵 SIMPLIFIED SONG SYSTEM (NO FADE) */
 const songs={
 1:{src:"rakh_lo_tum_chupake.mp3",start:30},
 2:{src:"samjhavan.mp3",start:34},
@@ -110,38 +108,18 @@ yes:{src:"ranjhna.mp3",start:41}
 };
 
 const music=document.getElementById("bgMusic");
-music.volume=0;
-
-function fadeIn(){
-let v=0;
-const i=setInterval(()=>{
-if(v<1){v+=0.05;music.volume=v;}
-else clearInterval(i);
-},100);
-}
-
-function fadeOut(cb){
-let v=music.volume;
-const i=setInterval(()=>{
-if(v>0){v-=0.05;music.volume=v;}
-else{clearInterval(i);cb();}
-},100);
-}
 
 function playSong(key){
-fadeOut(()=>{
+music.pause();
 music.src=songs[key].src;
 music.load();
 music.addEventListener("loadedmetadata",function setStart(){
 music.currentTime=songs[key].start;
 music.play().catch(()=>{});
-fadeIn();
 music.removeEventListener("loadedmetadata",setStart);
-});
 });
 }
 
-/* OVERRIDE PAGE SWITCH */
 function showPage(num){
 for(let i=1;i<=5;i++){
 document.getElementById("page"+i).style.display="none";
@@ -171,7 +149,6 @@ setTimeout(typeIntro,40);
 }
 typeIntro();
 
-/* HEART TYPEWRITER */
 let current=1;
 const heartTexts={
 1:`I know I messed up, and I won’t pretend I didn’t. I said things I shouldn’t have, reacted in ways I shouldn’t have, and I hurt you. That wasn’t my intention, but intentions don’t erase impact. I’m truly sorry for making you feel unimportant or unheard. You deserve patience, softness, and understanding — not frustration. If I could rewind that moment, I would choose calmer words and a kinder tone. I never want to be the reason your smile fades. Please believe me when I say I regret it deeply.`,
@@ -204,7 +181,6 @@ setTimeout(typing,25);
 typing();
 }
 
-/* OTHER TEXTS */
 const texts={
 3:`I need you in my life not because I can’t survive without you, but because life feels incomplete without you. You bring a balance to me that I didn’t even realize I was missing. The way you listen, the way you react, the way you care — it makes ordinary days feel meaningful. You calm my chaos. You challenge me to grow. You make me want to become a better version of myself, not out of pressure, but out of love and respect.
 When something good happens, you’re the first person I want to tell. When something goes wrong, you’re the one I wish I could turn to. That says everything. You’re not just someone in my life — you’re someone who shapes it. And that’s rare. I don’t want a future where you’re just a memory or a “what if.” I want you beside me, laughing with me, building something real together. That’s why I need you — not out of dependency, but because my heart chooses you.
@@ -234,12 +210,9 @@ typing();
 }
 
 function moveNo(){noBtn.style.transform=`translate(${Math.random()*200-100}px,${Math.random()*60-30}px)`;}
-function yesClicked(){choiceBox.style.display="none";finalResponse.style.display="block";finalResponse.innerText="Thanks yaar love you yaar aap best ho yaar🤭💜";}
 
-/* PETALS */
 setInterval(()=>{let p=document.createElement("div");p.className="petal";p.innerHTML="🌸";p.style.left=Math.random()*100+"vw";p.style.animationDuration=(8+Math.random()*4)+"s";document.body.appendChild(p);setTimeout(()=>p.remove(),12000);},500);
 
-/* SPARKLES */
 setInterval(()=>{let s=document.createElement("div");s.className="sparkle";s.style.left=Math.random()*100+"vw";s.style.top=Math.random()*100+"vh";document.body.appendChild(s);setTimeout(()=>s.remove(),900);},120);
 
 </script>
